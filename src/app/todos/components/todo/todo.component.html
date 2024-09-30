@@ -1,0 +1,56 @@
+<div class="container mt-3">
+  <div class="row mb-2">
+    <div class="col-12">
+      <div class="d-flex flex-column flex-md-row justify-content-md-between">
+        <h1>{{statusForm? 'Crear' : 'Lista de'}} Tareas</h1>
+        <button type="button" class="btn btn-primary" (click)="statusForm = !statusForm">{{statusForm? 'Cancelar creación' : 'Crear Tarea'}}</button>
+      </div>
+    </div>
+  </div>
+
+  <app-create-todo *ngIf="statusForm else listTareas" (eventTaskSuccess)="statusForm = !$event"></app-create-todo>
+
+  <ng-template #listTareas>
+    <div class="row mb-2">
+      <div class="col-12">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center ">
+          <h4 class="m-0" >Filtros: </h4>
+          <div>
+            <button class="btn btn-secondary ms-2" (click)="applyFilter('todas')"> <i class="bi bi-check-circle" *ngIf="statusfilter == 'todas'"></i> Todas</button>
+            <button class="btn btn-secondary ms-2" (click)="applyFilter('completadas')"> <i class="bi bi-check-circle" *ngIf="statusfilter == 'completadas'"></i> Completadas</button>
+            <button class="btn btn-secondary ms-2" (click)="applyFilter('pendientes')"> <i class="bi bi-check-circle" *ngIf="statusfilter == 'pendientes'"></i> Pendientes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning" role="alert" *ngIf="listaTareas.length === 0">
+      No hay tareas registradas
+    </div>
+
+    <ol class="list-group list-group-numbered" >
+      <li class="list-group-item d-flex justify-content-between align-items-start" *ngFor="let tarea of listaTareas; let i = index">
+        <div class="ms-2 me-auto">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="flexCheckDefault{{i}}" [checked]="tarea.estado === 'completadas'" (change)="updateStatusTarea(tarea, $event)">
+            <label class="form-check-label fw-bold" for="flexCheckDefault{{i}}">
+              {{tarea.nombreTarea}} -- {{tarea.fechaMaxima}}
+            </label>
+          </div>
+          <div class="fw-bold">Personas Asociadas:</div>
+          <ul>
+            <li *ngFor="let persona of tarea.personas">
+              <p class="mb-1">{{persona.nombre}} ({{persona.edad}})</p>
+  
+              Habilidades: <span class="badge text-bg-secondary me-2" *ngFor="let hab of persona.habilidades">{{hab.nombreHabilidad}}</span>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </ng-template>
+  <section *ngIf="!statusForm">
+    
+  </section>
+
+</div>
